@@ -1,0 +1,32 @@
+{
+  "name": "simple-express-decorators",
+  "version": "0.0.1",
+  "description": "Simple express decorators",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "rimraf dist && tsc",
+    "prepublish": "npm run build"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/apconic/simple-express-decorators.git"
+  },
+  "author": "Suhail Ansari",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/apconic/simple-express-decorators/issues"
+  },
+  "homepage": "https://github.com/apconic/simple-express-decorators#readme",
+  "devDependencies": {
+    "@types/express": "^4.16.0",
+    "rimraf": "^2.6.2",
+    "typescript": "^3.0.1"
+  },
+  "dependencies": {
+    "express": "^4.16.3",
+    "inversify": "^4.13.0",
+    "reflect-metadata": "^0.1.12"
+  }
+}
