@@ -1,64 +1,29 @@
 "use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
+const express_1 = __importDefault(require("express"));
+const route_manager_1 = __importDefault(require("./route-manager"));
 class Server {
-    constructor(app, container) {
-        this.app = app;
+    constructor(port, container) {
+        this.routeManagers = new Map();
+        this.port = port;
+        this.app = express_1.default();
         this.container = container;
     }
-    static registerRouteControllers(controllerName, params) {
-        Server.routeControllers.set(controllerName, params);
+    use(...middleWareFunc) {
+        this.app.use(middleWareFunc);
     }
-    static registerGetMethodRoutes(params) {
-        Server.getMethodRoutes.push(params);
+    createRouter(path, authenticator) {
+        const router = express_1.default.Router();
+        const routeManager = new route_manager_1.default(router, this.container);
+        routeManager.configure(authenticator);
+        this.routeManagers.set(path, routeManager);
+        this.app.use(path, router);
     }
-    static registerPostMethodRoutes(params) {
-        Server.postMethodRoutes.push(params);
-    }
-    static registerDeleteMethodRoutes(params) {
-        Server.deleteMethodRoutes.push(params);
-    }
-    start(port) {
-        Server.getMethodRoutes.forEach(route => {
-            const routeControllerConfig = Server.routeControllers.get(route.target);
-            const targetController = routeControllerConfig.name;
-            const routePath = `${routeControllerConfig.basePath}${route.path}`;
-            this.app.get(routePath, (request, response) => {
-                const controller = this.container.get(targetController);
-                if (!controller || !controller[route.propertyKey]) {
-                    return response.status(404).send({ message: 'Invalid path' });
-                }
-                controller[route.propertyKey](request, response);
-            });
-        });
-        Server.postMethodRoutes.forEach(postRoute => {
-            const routeControllerConfig = Server.routeControllers.get(postRoute.target);
-            const targetController = routeControllerConfig.name;
-            const routePath = `${routeControllerConfig.basePath}${postRoute.path}`;
-            this.app.post(routePath, (request, response) => {
-                const controller = this.container.get(targetController);
-                if (!controller || !controller[postRoute.propertyKey]) {
-                    return response.status(404).send({ message: 'Invalid path' });
-                }
-                controller[postRoute.propertyKey](request, response);
-            });
-        });
-        Server.deleteMethodRoutes.forEach(deleteRoute => {
-            const routeControllerConfig = Server.routeControllers.get(deleteRoute.target);
-            const targetController = routeControllerConfig.name;
-            const routePath = `${routeControllerConfig.basePath}${deleteRoute.path}`;
-            this.app.post(routePath, (request, response) => {
-                const controller = this.container.get(targetController);
-                if (!controller && !controller[deleteRoute.propertyKey]) {
-                    return response.status(404).send({ message: 'Invalid path' });
-                }
-                controller[deleteRoute.propertyKey](request, response);
-            });
-        });
-        this.app.listen(port);
+    start() {
+        this.app.listen(this.port);
     }
 }
-Server.getMethodRoutes = [];
-Server.postMethodRoutes = [];
-Server.deleteMethodRoutes = [];
-Server.routeControllers = new Map();
 exports.default = Server;
