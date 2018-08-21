@@ -1,29 +1,29 @@
-import Server from './server';
+import RouteManager from './route-manager';
 import MethodParams from './method-params'
 
-export function get(path: string) {
+export function get(path: string, role?: any) {
   return function (target: any, propertyKey: string, descriptor: PropertyDescriptor) {
     const name = Object.create(target).constructor.name;
-    Server.registerGetMethodRoutes(new MethodParams(name, path, propertyKey));
+    RouteManager.registerGetMethodRoutes(new MethodParams(name, path, propertyKey, role || null));
   }
 }
 
-export function post(path: string) {
+export function post(path: string, role?: any) {
   return function (target: any, propertyKey: string, descriptor: PropertyDescriptor) {
     const name = Object.create(target).constructor.name;
-    Server.registerPostMethodRoutes(new MethodParams(name, path, propertyKey));
+    RouteManager.registerPostMethodRoutes(new MethodParams(name, path, propertyKey, role || null));
   }
 }
 
-export function del(path: string) {
+export function del(path: string, role?: any) {
   return function (target: any, propertyKey: string, descriptor: PropertyDescriptor) {
     const name = Object.create(target).constructor.name;
-    Server.registerDeleteMethodRoutes(new MethodParams(name, path, propertyKey));
+    RouteManager.registerDeleteMethodRoutes(new MethodParams(name, path, propertyKey, role || null));
   }
 }
 
 export function controller(name: any, basePath: string) {
   return function(target: Function) {
-    Server.registerRouteControllers(target.name, { basePath, name });
+    RouteManager.registerRouteControllers(target.name, { basePath, name });
   }
 }

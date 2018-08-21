@@ -44,7 +44,7 @@ const container = new Container();
 container.bind<UserService>(TYPES.UserService).to(UserService);
 container.bind<UserController>(TYPES.UserController).to(UserController);
 
-const app = express();
-const server = new Server(app, container);
-server.start(3000);
+const server: Server = new Server(3000, container);
+server.createRouter('/v1', () => (req: any, res: any, next: Function) => next());
+server.start();
 ```
