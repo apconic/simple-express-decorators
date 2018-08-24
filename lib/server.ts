@@ -1,16 +1,22 @@
-import express, { Router, Application, RequestHandler } from 'express';
+import express, { Application, RequestHandler } from 'express';
 import RouteManager from './route-manager';
 import { Container } from 'inversify';
+import * as http from 'http';
 
 export default class Server {
   private port: any;
   private app: Application;
+  private httpServer: http.Server | null;
   private container: Container;
-  private routeManagers: Map<string, RouteManager> = new Map<string, RouteManager>();
+  private routeManagers: Map<string, RouteManager> = new Map<
+    string,
+    RouteManager
+  >();
 
   constructor(port: any, container: Container) {
     this.port = port;
     this.app = express();
+    this.httpServer = null;
     this.container = container;
   }
 
@@ -27,6 +33,16 @@ export default class Server {
   }
 
   start() {
-    this.app.listen(this.port);
+    if (!this.httpServer) {
+      this.httpServer = this.app.listen(this.port);
+    }
+  }
+
+  stop() {
+    if (!this.httpServer) {
+      return;
+    }
+    this.httpServer.close();
+    this.httpServer = null;
   }
 }
