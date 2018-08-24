@@ -5,7 +5,7 @@ export default class Server {
     private app;
     private container;
     private routeManagers;
-    constructor(port: number, container: Container);
+    constructor(port: any, container: Container);
     use(...middleWareFunc: RequestHandler[]): void;
     createRouter(path: string, authenticator: Function): void;
     start(): void;

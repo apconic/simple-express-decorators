@@ -3,12 +3,12 @@ import RouteManager from './route-manager';
 import { Container } from 'inversify';
 
 export default class Server {
-  private port: number;
+  private port: any;
   private app: Application;
   private container: Container;
   private routeManagers: Map<string, RouteManager> = new Map<string, RouteManager>();
 
-  constructor(port: number, container: Container) {
+  constructor(port: any, container: Container) {
     this.port = port;
     this.app = express();
     this.container = container;
