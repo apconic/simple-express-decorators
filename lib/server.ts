@@ -1,8 +1,7 @@
-import express, { Application, RequestHandler } from 'express';
+import express, { Application } from 'express';
 import RouteManager from './route-manager';
 import { Container } from 'inversify';
 import * as http from 'http';
-import { RequestHandlerParams } from 'express-serve-static-core';
 
 export default class Server {
   private port: any;
