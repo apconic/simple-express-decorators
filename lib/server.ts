@@ -1,4 +1,4 @@
-import express, { Application, RequestHandler } from 'express';
+import express, { Application } from 'express';
 import RouteManager from './route-manager';
 import { Container } from 'inversify';
 import * as http from 'http';
@@ -20,7 +20,7 @@ export default class Server {
     this.container = container;
   }
 
-  use(...middleWareFunc: RequestHandler[]) {
+  use(...middleWareFunc: any[]) {
     this.app.use(middleWareFunc);
   }
 
