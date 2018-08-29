@@ -1,6 +1,6 @@
 {
   "name": "simple-express-decorators",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Simple express decorators",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",

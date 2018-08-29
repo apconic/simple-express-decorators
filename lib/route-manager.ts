@@ -11,7 +11,7 @@ export default class RouteManager {
   private container: Container;
 
   public static registerRouteControllers(controllerName: string, params: any) {
-    RouteManager.routeControllers.set(controllerName, params);    
+    RouteManager.routeControllers.set(controllerName, params);
   }
 
   public static registerGetMethodRoutes(params: MethodParams) {
@@ -37,26 +37,34 @@ export default class RouteManager {
       const routeControllerConfig = RouteManager.routeControllers.get(target);
       const targetController = routeControllerConfig.name;
       const routePath = `${routeControllerConfig.basePath}${path}`;
-      this.router.get(routePath, role ? authenticator(role) : authenticator(), (request: any, response: any) => {
-        const controller: any = this.container.get(targetController);
-        if (!controller || !controller[propertyKey]) {
-          return response.status(404).send({ message: 'Invalid path' });
+      this.router.get(
+        routePath,
+        role ? authenticator(role) : authenticator(),
+        (request: any, response: any, next: any) => {
+          const controller: any = this.container.get(targetController);
+          if (!controller || !controller[propertyKey]) {
+            return response.status(404).send({ message: 'Invalid path' });
+          }
+          controller[propertyKey](request, response, next);
         }
-        controller[propertyKey](request, response);
-      });
+      );
     });
     RouteManager.postMethodParams.forEach(params => {
       const { target, path, role, propertyKey } = params;
       const routeControllerConfig = RouteManager.routeControllers.get(target);
       const targetController = routeControllerConfig.name;
       const routePath = `${routeControllerConfig.basePath}${path}`;
-      this.router.post(routePath, role ? authenticator(role) : authenticator(), (request: any, response: any) => {
-        const controller: any = this.container.get(targetController);
-        if (!controller || !controller[propertyKey]) {
-          return response.status(404).send({ message: 'Invalid path' });
+      this.router.post(
+        routePath,
+        role ? authenticator(role) : authenticator(),
+        (request: any, response: any, next: any) => {
+          const controller: any = this.container.get(targetController);
+          if (!controller || !controller[propertyKey]) {
+            return response.status(404).send({ message: 'Invalid path' });
+          }
+          controller[propertyKey](request, response, next);
         }
-        controller[propertyKey](request, response);
-      });
+      );
     });
 
     RouteManager.deleteMethodParams.forEach(params => {
@@ -64,13 +72,17 @@ export default class RouteManager {
       const routeControllerConfig = RouteManager.routeControllers.get(target);
       const targetController = routeControllerConfig.name;
       const routePath = `${routeControllerConfig.basePath}${path}`;
-      this.router.delete(routePath, role ? authenticator(role) : authenticator(), (request: any, response: any) => {
-        const controller: any = this.container.get(targetController);
-        if (!controller || !controller[propertyKey]) {
-          return response.status(404).send({ message: 'Invalid path' });
+      this.router.delete(
+        routePath,
+        role ? authenticator(role) : authenticator(),
+        (request: any, response: any, next: any) => {
+          const controller: any = this.container.get(targetController);
+          if (!controller || !controller[propertyKey]) {
+            return response.status(404).send({ message: 'Invalid path' });
+          }
+          controller[propertyKey](request, response, next);
         }
-        controller[propertyKey](request, response);
-      });
+      );
     });
   }
 }
