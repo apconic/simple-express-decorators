@@ -10,6 +10,7 @@ class Server {
         this.routeManagers = new Map();
         this.port = port;
         this.app = express_1.default();
+        this.httpServer = null;
         this.container = container;
     }
     use(...middleWareFunc) {
@@ -23,7 +24,16 @@ class Server {
         this.app.use(path, router);
     }
     start() {
-        this.app.listen(this.port);
+        if (!this.httpServer) {
+            this.httpServer = this.app.listen(this.port);
+        }
+    }
+    stop() {
+        if (!this.httpServer) {
+            return;
+        }
+        this.httpServer.close();
+        this.httpServer = null;
     }
 }
 exports.default = Server;
